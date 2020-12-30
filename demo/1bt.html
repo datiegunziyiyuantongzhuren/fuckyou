@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<script type="text/javascript"  src="./js/jquery-2.1.0.js"></script>
+	</head>
+	<body>
+		
+	<!-- 	"forecast":[{"date":"30鏃ユ槦鏈熶笁","high":"楂樻俯 -5鈩�","fengli":"<![CDATA[3绾]>","low":"浣庢俯 -12鈩�","fengxiang":"瑗垮寳椋�","type":"鏅�"}
+
+
+     日期  高温  低温  风力  风向  天气  城市
+	 
+	 城市  日期 天气 高温  低温  风力 风向 -->
+
+    <div class="container">
+		
+		
+		
+		<br>
+		<br>
+		<br>
+		<!-- 通过onsubmit属性屏蔽form的 -->
+		<form class="form-inline" onsubmit="return popfalse()">
+		  <div class="form-group">
+		    <label for="city"></label>
+		    <input type="text" class="form-control" id="city" placeholder="请输入要查询的城市名称">
+		  </div>
+		  	<button onclick="search()"  class="btn btn-info">查询</button>
+		</form>
+		
+		<!-- <input class="form-control" type="text"  id="city" placeholder="请输入要查询的城市名称" /> -->
+		
+	
+		<br>
+		<hr>
+		
+	
+		<table class="table table-striped table-bordered table-hover">
+			<tr>
+				<th>城市</th>
+				<th>日期</th>
+				<th>天气</th>
+				<th>高温</th>
+				<th>低温</th>
+				<th>风力</th>
+				<th>风向</th>
+			</tr>
+			
+			
+			<tbody id="tb">
+				
+				
+				
+				
+				
+			</tbody>
+			
+			
+		</table>
+</div>
+
+<script type="text/javascript">
+	function popfalse(){
+		return false;
+	}
+	function search(){
+		//h获取文本信息
+		var city=document.getElementById("city").value;//获取文本框的value
+		//向后台发送ajax请求
+		//tongguojquery发送ajax请求
+		$.ajax({
+			
+			type:"get",
+			url:"http://wthrcdn.etouch.cn/weather_mini?ak=1233124124&city="+city,
+			success:function(data){
+				//有我们的后台程序决定
+				//alert(data);//当ajax请求成功后，或触发方法，并回调传回数据data、
+				
+				//JSON数据解析==json字符串转成json对象的格式
+				var jsonOBJ=JSON.parse(data);//解析json数据的，字符转成对象
+				var cityname=jsonOBJ.data.city;//获取城市 名称
+				var forecast=jsonOBJ.data.forecast;//获取未来的天气信息//JSON数组
+				
+				var tb=$("#tb");//jquery查找元素标签的方式  #代表id
+				tb.html("");
+				for(var index = 0;index<forecast.length;index++)
+				{
+					var wea=forecast[index];//获取每天的天气信息
+					
+					
+					var str="<tr>"+
+						"<td>" + cityname + "</td>"+
+						"<td>" + wea.date + "</td>"+
+						"<td>" + wea.type + "</td>"+
+						"<td>" + wea.high + "</td>"+
+						"<td>" + wea.low + "</td>"+
+						"<td>" + wea.fengli + "</td>"+
+						"<td>" + wea.fengxiang + "</td>"+
+					"</tr>";
+					
+					tb.append(str);//将字符串页面添加到指定的标签中
+		
+				}
+				
+			
+			}
+			
+			
+			
+		});
+		
+		
+	}
+	
+</script>
+	</body>
+</html>
